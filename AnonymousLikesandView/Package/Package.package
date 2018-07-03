@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="738b3f66-4270-4999-b687-a19b1f0d9538" solutionId="738b3f66-4270-4999-b687-a19b1f0d9538" resetWebServer="false" sharePointProductVersion="15.0" name="AnonymousLikesandView" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/PackageModel">
+  <features>
+    <featureReference itemId="9210f1e8-ce20-4ad0-8ded-f54e466bed0e" />
+    <featureReference itemId="12a1d55d-490f-462e-b645-a18c0ee3a08e" />
+  </features>
+</package>

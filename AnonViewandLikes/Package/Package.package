@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="7bb1a278-44bf-455c-b3b5-72ebc964625d" solutionId="7bb1a278-44bf-455c-b3b5-72ebc964625d" resetWebServer="false" sharePointProductVersion="15.0" name="AnonViewandLikes" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/PackageModel">
+  <features>
+    <featureReference itemId="43b1d163-efa7-4452-ba7f-d363ad916cdf" />
+  </features>
+</package>

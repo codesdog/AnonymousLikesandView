@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/" >
+  <Module Name="ItemLikes" List="113" Url="_catalogs/wp">
+    <File Path="ItemLikes\ItemLikes.webpart" Url="AnonymousLikesandView_ItemLikes.webpart" Type="GhostableInLibrary" >
+      <Property Name="Group" Value="Custom" />
+    </File>
+  </Module>
+</Elements>

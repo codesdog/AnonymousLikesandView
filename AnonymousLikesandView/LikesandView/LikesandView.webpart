@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<webParts>
+  <webPart xmlns="http://schemas.microsoft.com/WebPart/v3">
+    <metaData>
+      <type name="AnonymousLikesandView.LikesandView.LikesandView, $SharePoint.Project.AssemblyFullName$" />
+      <importErrorMessage>$Resources:core,ImportErrorMessage;</importErrorMessage>
+    </metaData>
+    <data>
+      <properties>
+        <property name="Title" type="string">浏览与点赞</property>
+        <property name="Description" type="string">匿名点赞和阅读量显示</property>
+      </properties>
+    </data>
+  </webPart>
+</webParts>
