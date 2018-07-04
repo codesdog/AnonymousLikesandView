@@ -28,7 +28,7 @@ namespace AnonViewandLikes.ViewandLikes
         #region 自定义设置
 
         private string _listName = "导师简介";
-        [Personalizable, WebDisplayName("列表名称"), WebDescription("web部件读取数据所在的列表名称"), WebBrowsable, Category("自定义设置")]
+        [Personalizable, WebDisplayName("源列表名称"), WebDescription("web部件读取数据所在的列表名称"), WebBrowsable, Category("自定义设置")]
         public string ListName
         {
             get
@@ -38,6 +38,20 @@ namespace AnonViewandLikes.ViewandLikes
             set
             {
                 this._listName = value;
+            }
+        }
+
+        private string _historyList = "访问历史";
+        [Personalizable, WebDisplayName("历史列表名称"), WebDescription("列表访问历史列表名称"), WebBrowsable, Category("自定义设置")]
+        public string HistoryList
+        {
+            get
+            {
+                return this._historyList;
+            }
+            set
+            {
+                this._historyList = value;
             }
         }
 

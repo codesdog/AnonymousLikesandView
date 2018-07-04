@@ -19,24 +19,22 @@
         text-align:center;
         padding:5px 10px 5px 10px;
         border:1px solid #bfcbd6;
-        width:120px;
+
     }
     .ultools li:hover{
         background-color: #bfcbd6; /* 背景色 */
         color: #465c71; /* 文字颜色 */
         text-decoration: none; /* 不显示超链接下划线 */
     }
+
+    .viewspan {
+        padding-left:20px;
+        padding-top:-2px;
+        line-height: 25px;
+        background-position:left center;
+        font-size: 14px;
+    }
 </style>
-<ul class="ultools" id="ultools" runat="server">
-    <li>
-        <asp:Image ID="Image1" runat="server" Width="20px" ImageUrl="../_layouts/15/images/view.png"/>
-        &nbsp;<asp:Label ID="lbViews" runat="server" Text="0"></asp:Label>
-    </li>
-    <li>
-        <asp:ImageButton ID="imgBtnLikes" runat="server" ImageUrl="../_layouts/15/images/Likes.png" Width="20px" />
-        &nbsp;<asp:Label ID="lbLikes" runat="server" Text="0"></asp:Label>
-    </li>
-    <li>
-        <asp:ImageButton ID="imgBtnShare" runat="server" ImageUrl="../_layouts/15/images/Share.png" Width="20px" ToolTip="分享" />
-    </li>
-</ul>
+<span class="viewspan" style="background-image: url(../_layouts/15/images/view.png);background-repeat: no-repeat;" id="viewspan" runat="server"></span>
+<span class="viewspan" id="viewtimespan" runat="server"  style="background-image: url(../_layouts/15/images/viewtime.png);background-repeat: no-repeat;" ></span>
+
