@@ -38,3 +38,4 @@
 <span class="viewspan" style="background-image: url(../_layouts/15/images/view.png);background-repeat: no-repeat;" id="viewspan" runat="server"></span>
 <span class="viewspan" id="viewtimespan" runat="server"  style="background-image: url(../_layouts/15/images/viewtime.png);background-repeat: no-repeat;" ></span>
 
+

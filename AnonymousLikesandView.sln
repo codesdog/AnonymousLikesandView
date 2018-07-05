@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnonViewandLikes", "AnonViewandLikes\AnonViewandLikes.csproj", "{4D696D3F-C05A-4184-86EF-EF9B4D9DEE38}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PageHitCount", "PageHitCount\PageHitCount.csproj", "{9E23CC9D-E5A1-4AC3-AB17-81569B3EF991}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,12 @@ Global
 		{4D696D3F-C05A-4184-86EF-EF9B4D9DEE38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D696D3F-C05A-4184-86EF-EF9B4D9DEE38}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4D696D3F-C05A-4184-86EF-EF9B4D9DEE38}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{9E23CC9D-E5A1-4AC3-AB17-81569B3EF991}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E23CC9D-E5A1-4AC3-AB17-81569B3EF991}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E23CC9D-E5A1-4AC3-AB17-81569B3EF991}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{9E23CC9D-E5A1-4AC3-AB17-81569B3EF991}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E23CC9D-E5A1-4AC3-AB17-81569B3EF991}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E23CC9D-E5A1-4AC3-AB17-81569B3EF991}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

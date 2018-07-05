@@ -9,23 +9,23 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Diagnostics;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace AnonViewandLikes.ViewandLikes
 {
     public partial class ViewandLikesUserControl : UserControl
     {
         public ViewandLikes webObj { get; set; }
+        string G_Str_ConnString = "Database=VAExtension;Server=202.118.11.99;User ID=sa;Password=sasasasa;Trusted_Connection=False;";
+        SqlConnection G_Con;  //声明链接对象
         protected void Page_Load(object sender, EventArgs e)
         {
             string urlStr = Request.Url.ToString();
             int itemId = int.Parse(GetQueryString("ID", urlStr));
             string sourceList = webObj.ListName;
             string historyList = webObj.HistoryList;
-            if (!IsPostBack)
-            {
-                GetandUpdateItemById(itemId,sourceList, historyList);
-            }
-            //imgBtnLikes.Click += likeClick();
+            GetandUpdateItemById(itemId,sourceList, historyList);
         }
 
         public void GetandUpdateItemById(int itemId, string sourceList, string historyList)
@@ -176,6 +176,22 @@ namespace AnonViewandLikes.ViewandLikes
             return urlfieldValue;
         }
 
+        private void countMe()
+        {
+            DataSet tmpDs = new DataSet();
+            tmpDs.ReadXml(Server.MapPath("~/counter.xml"));
+
+            int hits = Int32.Parse(tmpDs.Tables[0].Rows[0]["hits"].ToString());
+
+            hits += 1;
+
+            tmpDs.Tables[0].Rows[0]["hits"] = hits.ToString();
+
+            tmpDs.WriteXml(Server.MapPath("~/counter.xml"));
+
+        }
+
+
 
         ///<summary>
         ///获取客户端IP地址
@@ -240,7 +256,12 @@ namespace AnonViewandLikes.ViewandLikes
             return "";
         }
 
-
+        public SqlConnection GetCon()
+        {
+            G_Con = new SqlConnection(G_Str_ConnString);
+            G_Con.Open();
+            return G_Con;
+        }
 
     }
 }

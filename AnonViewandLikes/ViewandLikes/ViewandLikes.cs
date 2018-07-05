@@ -69,5 +69,20 @@ namespace AnonViewandLikes.ViewandLikes
             }
         }
         #endregion
+
+        #region 变量
+        private string _connStr = "Database=VAExtension;Server=202.118.11.99;User ID=sa;Password=sasasasa;Trusted_Connection=False;";
+        public string ConnStr
+        {
+            get
+            {
+                return this._connStr;
+            }
+            set
+            {
+                this._connStr = value;
+            }
+        }
+        #endregion
     }
 }
