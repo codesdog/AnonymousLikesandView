@@ -7,18 +7,18 @@
 // </自动生成>
 //------------------------------------------------------------------------------
 
-namespace PageHitCount.PageHitCount {
+namespace PageHitCount.CountPageHit {
     
     
-    public partial class PageHitCountUserControl {
+    public partial class CountPageHitUserControl {
         
         /// <summary>
-        /// lbCounter 控件。
+        /// GridView1 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbCounter;
+        protected global::System.Web.UI.WebControls.GridView GridView1;
     }
 }

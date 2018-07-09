@@ -53,17 +53,21 @@
     <Reference Include="Microsoft.SharePoint.Client.ServerRuntime" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PageHitCount\PageHitCount.cs" />
-    <Compile Include="PageHitCount\PageHitCountUserControl.ascx.cs">
-      <DependentUpon>PageHitCountUserControl.ascx</DependentUpon>
+    <Compile Include="CountPageHit\CountPageHit.cs" />
+    <Compile Include="CountPageHit\CountPageHitUserControl.ascx.cs">
+      <DependentUpon>CountPageHitUserControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="PageHitCount\PageHitCountUserControl.ascx.designer.cs">
-      <DependentUpon>PageHitCountUserControl.ascx.cs</DependentUpon>
+    <Compile Include="CountPageHit\CountPageHitUserControl.ascx.designer.cs">
+      <DependentUpon>CountPageHitUserControl.ascx.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CountPageHit\CountPageHit.webpart" />
+    <None Include="CountPageHit\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{c33bb514-cb07-4f63-a45a-f22ae5ffaec1}</SharePointProjectItemId>
+    </None>
     <None Include="Features\Feature1\Feature1.feature">
       <FeatureId>{ad9ae3c5-3799-4a8b-8405-29bb90fd094c}</FeatureId>
     </None>
@@ -74,17 +78,13 @@
     <None Include="Package\Package.Template.xml">
       <DependentUpon>Package.package</DependentUpon>
     </None>
-    <None Include="PageHitCount\SharePointProjectItem.spdata">
-      <SharePointProjectItemId>{5b7fe8eb-34da-4352-b4b9-ced16ce74de7}</SharePointProjectItemId>
-    </None>
-    <None Include="PageHitCount\PageHitCount.webpart" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CountPageHit\CountPageHitUserControl.ascx" />
+    <Content Include="CountPageHit\Elements.xml" />
     <Content Include="Features\Feature1\Feature1.Template.xml">
       <DependentUpon>Feature1.feature</DependentUpon>
     </Content>
-    <Content Include="PageHitCount\Elements.xml" />
-    <Content Include="PageHitCount\PageHitCountUserControl.ascx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

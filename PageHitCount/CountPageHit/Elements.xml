@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/" >
-  <Module Name="PageHitCount" List="113" Url="_catalogs/wp">
-    <File Path="PageHitCount\PageHitCount.webpart" Url="PageHitCount_PageHitCount.webpart" Type="GhostableInLibrary" >
+  <Module Name="CountPageHit" List="113" Url="_catalogs/wp">
+    <File Path="CountPageHit\CountPageHit.webpart" Url="PageHitCount_CountPageHit.webpart" Type="GhostableInLibrary" >
       <Property Name="Group" Value="Custom" />
     </File>
   </Module>

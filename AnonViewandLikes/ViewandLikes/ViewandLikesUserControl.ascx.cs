@@ -17,8 +17,7 @@ namespace AnonViewandLikes.ViewandLikes
     public partial class ViewandLikesUserControl : UserControl
     {
         public ViewandLikes webObj { get; set; }
-        string G_Str_ConnString = "Database=VAExtension;Server=202.118.11.99;User ID=sa;Password=sasasasa;Trusted_Connection=False;";
-        SqlConnection G_Con;  //声明链接对象
+
         protected void Page_Load(object sender, EventArgs e)
         {
             string urlStr = Request.Url.ToString();
@@ -99,25 +98,6 @@ namespace AnonViewandLikes.ViewandLikes
             });
         }
 
-        private static string GetIP()
-        {
-            Process cmd = new Process();
-            cmd.StartInfo.FileName = "ipconfig.exe";//设置程序名
-            cmd.StartInfo.Arguments = "/all";  //参数
-                                               //重定向标准输出
-            cmd.StartInfo.RedirectStandardOutput = true;
-            cmd.StartInfo.RedirectStandardInput = true;
-            cmd.StartInfo.UseShellExecute = false;
-            cmd.StartInfo.CreateNoWindow = true;//不显示窗口（控制台程序是黑屏）
-            //cmd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;//暂时不明白什么意思
-            /*收集一下 有备无患.关于:ProcessWindowStyle.Hidden隐藏后如何再显示？hwndWin32Host = Win32Native.FindWindow(null, win32Exinfo.windowsName);Win32Native.ShowWindow(hwndWin32Host, 1);
-             * //先FindWindow找到窗口后再ShowWindow*/
-            cmd.Start();
-            string info = cmd.StandardOutput.ReadToEnd();
-            cmd.WaitForExit();
-            cmd.Close();
-            return info;
-        }
 
         public string[] getSourceList(string sourceListName, int itemId,string sourceUrl)
         {
@@ -176,22 +156,6 @@ namespace AnonViewandLikes.ViewandLikes
             return urlfieldValue;
         }
 
-        private void countMe()
-        {
-            DataSet tmpDs = new DataSet();
-            tmpDs.ReadXml(Server.MapPath("~/counter.xml"));
-
-            int hits = Int32.Parse(tmpDs.Tables[0].Rows[0]["hits"].ToString());
-
-            hits += 1;
-
-            tmpDs.Tables[0].Rows[0]["hits"] = hits.ToString();
-
-            tmpDs.WriteXml(Server.MapPath("~/counter.xml"));
-
-        }
-
-
 
         ///<summary>
         ///获取客户端IP地址
@@ -208,32 +172,6 @@ namespace AnonViewandLikes.ViewandLikes
                 ipAddr = HttpContext.Current.Request.UserHostAddress;
 
             return ipAddr;
-        }
-
-        /// <summary>
-        /// 获得客户端外网IP地址
-        /// </summary>
-        /// <returns>IP地址</returns>
-        private static string GetClientInternetIP()
-        {
-            //获取本机外网ip的url
-            string getIpUrl = "http://www.ipip.net/ip.html";//网上获取ip地址的网站
-            string tempip = "";
-            WebRequest wr = WebRequest.Create(getIpUrl);
-
-            Stream s = wr.GetResponse().GetResponseStream();
-            using (StreamReader sr = new StreamReader(s, Encoding.UTF8))
-            {
-                string all = sr.ReadToEnd(); //读取网站的数据
-
-                //解析出需要的数据
-                int start = all.IndexOf("<th colspan=\"3\">您的当前IP: <span style=\"color: rgb(243, 102, 102);\">");
-                int end = all.IndexOf("</span></th>");
-                tempip = all.Substring(start, end - start).Replace("<th colspan=\"3\">您的当前IP: <span style=\"color: rgb(243, 102, 102);\">", "");
-                sr.Close();
-                s.Close();
-            }
-            return tempip;
         }
 
         /// <summary>
@@ -255,13 +193,5 @@ namespace AnonViewandLikes.ViewandLikes
             }
             return "";
         }
-
-        public SqlConnection GetCon()
-        {
-            G_Con = new SqlConnection(G_Str_ConnString);
-            G_Con.Open();
-            return G_Con;
-        }
-
     }
 }
