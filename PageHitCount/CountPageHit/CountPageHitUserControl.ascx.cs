@@ -17,7 +17,7 @@ namespace PageHitCount.CountPageHit
         public static string Login_ID = ""; //定义全局变量，记录当前登录的用户编号
         public static string Login_Name = ""; //定义全局变量，记录当前登录的用户名
         public static SqlConnection My_con;  //定义一个SqlConnection类型的公共变量My_con，用于判断数据库是否连接成功
-        public static string M_str_sqlcon = @"Database=VAExtension;Server=202.118.11.99;User ID=sa;Password=sasasasa;Trusted_Connection=False;";
+        public static string M_str_sqlcon = "Database=VAExtension;Server=202.118.11.99;User ID=sa;Password=sasasasa;Trusted_Connection=False;";
 
         public CountPageHit webObj { get; set; }
         #endregion
@@ -32,8 +32,15 @@ namespace PageHitCount.CountPageHit
             //    this.lbCounter.Text = tmpDs.Tables[0].Rows[0]["hits"].ToString();
             //}
             long pageId = GetCurrentPageId();
-            CountHit(pageId);
-            ShowHit(pageId);
+            if (ConnectSuccess())
+            {
+                CountHit(pageId);
+                ShowHit(pageId);
+            }
+            else
+            {
+                lbmsg.Text = "无法访问数据库！";
+            }
         }
 
         private void countMe()
@@ -153,8 +160,7 @@ namespace PageHitCount.CountPageHit
                 sqlstr = @"INSERT INTO SPPageHits (PageID,Hited,HitUser,HitCount,HitToday,FromIP) VALUES (" + pageId+",'"+DateTime.Now+"','"+GetCurrentAccount()+"',1,1,'"+GetClientIPAddr()+"')";
                 long hitId = GetSqlItemId(sqlstr);
             }
-            My_con.Close();
-            My_con.Dispose();
+
             con_close();
         }
 
@@ -174,8 +180,6 @@ namespace PageHitCount.CountPageHit
             if (isRead)
             {
                 pageId=sqlDr.GetInt64(0);
-                My_con.Close();
-                My_con.Dispose();
             }
             else
             {
@@ -221,8 +225,61 @@ namespace PageHitCount.CountPageHit
         public static SqlConnection Getcon()
         {
             My_con = new SqlConnection(M_str_sqlcon);   //用SqlConnection对象与指定的数据库相连接
-            My_con.Open();  //打开数据库连接
-            return My_con;  //返回SqlConnection对象的信息
+            try
+            {
+                My_con.Open();  //打开数据库连接
+                if (My_con.State == ConnectionState.Open)
+                {
+                    return My_con;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+            //finally
+            //{
+            //    My_con.Close();
+            //}
+             //返回SqlConnection对象的信息
+        }
+        #endregion
+
+        #region 判断数据库是否连接成功
+        /// <summary>
+        /// 数据库连接是否成功
+        /// </summary>
+        /// <returns></returns>
+        public bool ConnectSuccess()
+        {
+            bool result = false;
+            //创建连接对象
+            My_con = new SqlConnection(M_str_sqlcon);
+            try
+            {
+                My_con.Open();
+                if (My_con.State == ConnectionState.Open)
+                {
+                    result = true;
+                }
+                else
+                {
+                    result = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+            finally
+            {
+                My_con.Close();
+            }
+            return result;
         }
         #endregion
 
@@ -260,10 +317,17 @@ namespace PageHitCount.CountPageHit
         public SqlDataReader GetSqlDataReader(string SQLstr)
         {
             Getcon();   //打开与数据库的连接
-            SqlCommand Mycom = My_con.CreateCommand(); //创建一个SqlCommand对象，用于执行SQL语句
-            Mycom.CommandText = SQLstr;    //获取指定的SQL语句
-            SqlDataReader Myread = Mycom.ExecuteReader(); //执行SQL语名句，生成一个SqlDataReader对象
-            return Myread;
+            if (My_con.State==ConnectionState.Open)
+            {
+                SqlCommand Mycom = My_con.CreateCommand(); //创建一个SqlCommand对象，用于执行SQL语句
+                Mycom.CommandText = SQLstr;    //获取指定的SQL语句
+                SqlDataReader Myread = Mycom.ExecuteReader(); //执行SQL语名句，生成一个SqlDataReader对象
+                return Myread;
+            }
+            else
+            {
+                return null;
+            }
         }
         #endregion
 
@@ -342,7 +406,30 @@ namespace PageHitCount.CountPageHit
             if (string.IsNullOrEmpty(ipAddr))
                 ipAddr = HttpContext.Current.Request.UserHostAddress;
 
+            if (string.IsNullOrEmpty(ipAddr))
+            {
+                ipAddr = "127.0.0.1";
+            }
+            if (ipAddr.Contains(","))
+            {
+                ipAddr = ipAddr.Substring(ipAddr.LastIndexOf(',') + 1, ipAddr.Length - ipAddr.LastIndexOf(',') - 1);
+            }
+            //最后判断获取是否成功，并检查IP地址的格式（检查其格式非常重要）
+            if (!IsIP(ipAddr))
+            {
+                ipAddr = "127.0.0.1";
+            }
             return ipAddr;
+        }
+
+        /// <summary>
+        /// 检查IP地址格式
+        /// </summary>
+        /// <param name="ipaddr"></param>
+        /// <returns></returns>
+        public static bool IsIP(string ipaddr)
+        {
+            return Regex.IsMatch(ipaddr, @"^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$");
         }
         #endregion
     }

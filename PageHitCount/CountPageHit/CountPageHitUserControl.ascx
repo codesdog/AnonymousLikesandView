@@ -79,7 +79,7 @@
 }
 </style>
 
-<%--<asp:Label ID="lbCounter" runat="server" Text="Label"></asp:Label>--%>
+<asp:Label ID="lbmsg" runat="server" Text=""></asp:Label>
 
 <asp:GridView ID="GridView1" runat="server" CssClass="GridViewStyle">
      <FooterStyle CssClass="GridViewFooterStyle" />
