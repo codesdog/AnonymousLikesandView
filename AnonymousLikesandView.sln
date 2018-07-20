@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnonViewandLikes", "AnonVie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PageHitCount", "PageHitCount\PageHitCount.csproj", "{9E23CC9D-E5A1-4AC3-AB17-81569B3EF991}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoutinePlan", "RoutinePlan\RoutinePlan.csproj", "{01E7FF92-89AC-46A5-B2D3-3601D40EB0CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,12 @@ Global
 		{9E23CC9D-E5A1-4AC3-AB17-81569B3EF991}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E23CC9D-E5A1-4AC3-AB17-81569B3EF991}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9E23CC9D-E5A1-4AC3-AB17-81569B3EF991}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{01E7FF92-89AC-46A5-B2D3-3601D40EB0CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01E7FF92-89AC-46A5-B2D3-3601D40EB0CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01E7FF92-89AC-46A5-B2D3-3601D40EB0CA}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{01E7FF92-89AC-46A5-B2D3-3601D40EB0CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01E7FF92-89AC-46A5-B2D3-3601D40EB0CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01E7FF92-89AC-46A5-B2D3-3601D40EB0CA}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
