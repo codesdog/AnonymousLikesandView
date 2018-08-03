@@ -5,6 +5,9 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace RoutinePlan.VisualWebPart1
 {
@@ -15,44 +18,56 @@ namespace RoutinePlan.VisualWebPart1
         {
             if (SPContext.Current.Site.OpenWeb().CurrentUser == null)
             {
-                Panel1.Visible = false;
+                AppraiseDiv.Visible = false;
             }
             else
             {
-                Panel1.Visible = true;
+                AppraiseDiv.Visible = true;
+                if (!IsPostBack)
+                {
+                    string rPlanList = webObj.RoutinePlanList;
+                    string siteUrl = webObj.SiteUrl;
+                    int colCount = webObj.ColCount;
+                    int minValue = webObj.MinValue;
+                    int maxValue = webObj.MaxValue;
+                    lbDaysSpan.Text = "（最少"+minValue+"天，最多"+maxValue+"天）";
+                    BindRoutinePlan(rPlanList, siteUrl,colCount);
+                    for (int i = 0; i < cblPlans.Items.Count; i++)
+                    {
+                        cblPlans.Items[i].Selected = true;
+                    }
+                }
             }
         }
+
+
         protected void btnMakePlans_Click(object sender, EventArgs e)
         {
             string rPlanList = webObj.RoutinePlanList;
             string siteUrl = webObj.SiteUrl;
             string planList = webObj.PlanList;
             string logList = webObj.LogList;
-            if (IsIntNum(tbDays.Text.Trim(),1,7))
+            int minValue= webObj.MinValue;
+            int maxValue = webObj.MaxValue;
+            if (IsIntNum(tbDays.Text.Trim()))
             {
                 int days = int.Parse(tbDays.Text.Trim());
-                string refStr=GetRoutinePlan(logList,rPlanList, siteUrl, planList, days);
-                if (refStr==days.ToString())
+                if (days>= minValue && days<= maxValue)
                 {
-                    lbErr.Text = "从今天起，"+days+ "天内的例行计划已生成，无需重复生成！";
-                }
-                else if (refStr=="0")
-                {
-                    DateTime dtNow = DateTime.Now.Date;
-                    lbErr.Text = "本次操作共生成了从 " + dtNow.ToShortDateString() + "起， " + days + " 天的例行计划！";
+                    MakeRoutinePlan(logList, rPlanList, siteUrl, planList, days);
                 }
                 else
                 {
-                    lbErr.Text = refStr;
+                    lbErr.Text = "请输入生成天数,天数为 " + minValue+" - "+maxValue+" 之内的整数";
                 }
             }
             else
             {
-                lbErr.Text = "请输入1-7的整数；";
+                lbErr.Text = "请输入生成天数,天数为 " + minValue + " - " + maxValue + " 之内的整数";
             }
         }
 
-        public static bool IsIntNum(string str,int minValue,int maxValue)
+        public static bool IsIntNum(string str)
         {
             bool ismatch;
             if (string.IsNullOrEmpty(str))
@@ -63,23 +78,20 @@ namespace RoutinePlan.VisualWebPart1
             {
                 Regex reg= new Regex(@"^[-]?[1-9]{1}\d*$|^[0]{1}$");
                 ismatch = reg.IsMatch(str);
-                if (ismatch)
-                {
-                    if (int.Parse(str) >= minValue && int.Parse(str) <= maxValue)
-                    {
-                        ismatch = true;
-                    }
-                    else
-                    {
-                        ismatch = false;
-                    }
-                }
             }
             return ismatch;
         }
-        private static string GetRoutinePlan(string LogList, string rPlanList, string siteUrl, string planList, int days)
+
+        /// <summary>
+        /// 根据需要从计算所得的某天起生成计算所得天数的例行计划，并填入planList列表
+        /// </summary>
+        /// <param name="LogList">执行历史列表</param>
+        /// <param name="rPlanList">例行计划列表</param>
+        /// <param name="siteUrl">网站地址</param>
+        /// <param name="planList">生成计划保存的列表</param>
+        /// <param name="days">用户设置的天数</param>
+        private void MakeRoutinePlan(string LogList, string rPlanList, string siteUrl, string planList, int days)
         {
-            string refStr="";
             SPUser currentUser = SPContext.Current.Site.OpenWeb().CurrentUser;
             SPSecurity.RunWithElevatedPrivileges(delegate ()
             {
@@ -91,88 +103,225 @@ namespace RoutinePlan.VisualWebPart1
                         using (SPWeb spWeb = spSite.OpenWeb())
                         {
                             spWeb.AllowUnsafeUpdates = true;
-                            SPList logList = spWeb.Lists.TryGetList(LogList);
-                            if (LogList != null)
-                            {
-                                SPQuery qry = new SPQuery();
-                                qry.Query = "<Where><Eq><FieldRef Name='Author' LookupId='True' /><Value Type='Integer'>" + currentUser.ID + "</Value></Eq></Where>";
-                                SPListItemCollection logListItems = logList.GetItems(qry);
-                                DateTime dtNow = DateTime.Now;
-                                if (logListItems.Count > 0)
-                                {
-                                    SPListItem logItem = logListItems[0];
-                                    DateTime dtEnd = (DateTime)logItem["截止日期"];
-                                    int n = GetNumberInt(logItem["标题"].ToString());
-                                    if (dtEnd.Date > dtNow.Date)
-                                    {
-                                        int leftdays = days - DateDiff(dtNow, dtEnd) - 1;
-                                        if (leftdays > 0)
-                                        {
-                                            k = DateDiff(dtNow, dtEnd) + 1;
-                                            n = n + 1;
 
-                                            logItem["标题"] = currentUser.Name + "第" + n + "次操作";
-                                            logItem["开始日期"] = dtNow;
-                                            logItem["截止日期"] = dtEnd.AddDays(leftdays);
-                                            logItem.Update();
-                                            refStr = k.ToString();
-                                        }
-                                        else
-                                        {
-                                            k = days;
-                                            refStr = days.ToString();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        k = 0;
-                                        refStr ="0";
-                                        n = n + 1;
-                                        logItem["标题"] = currentUser.Name + "第" + n + "次操作";
-                                        logItem["开始日期"] = dtNow;
-                                        logItem["截止日期"] = dtNow.AddDays(days - 1);
-                                        logItem.Update();
-                                    }
-                                }
-                                else
-                                {
-                                    k = 0;
-                                    refStr = "0";
-                                    SPListItem logItem = logList.AddItem();
-                                    logItem["标题"] = currentUser.Name + "第1次操作";
-                                    logItem["开始日期"] = dtNow;
-                                    logItem["截止日期"] = dtNow.AddDays(days - 1);
-                                    logItem["创建者"] = currentUser.ID;
-                                    logItem["修改者"] = currentUser.ID;
-                                    logItem.Update();
-                                }
-                            }
                             SPList spList = spWeb.Lists.TryGetList(rPlanList);
                             if (spList != null)
                             {
                                 SPListItemCollection rPlanListItems = spList.GetItems();
                                 if (rPlanListItems.Count > 0)
                                 {
-                                    foreach (SPListItem rPlanListItem in rPlanListItems)
+                                    Dictionary<int, string> dict = GetChecked(cblPlans);
+                                    foreach (KeyValuePair<int, string> kv in dict)
                                     {
-                                        SPList pList = spWeb.Lists.TryGetList(planList);
-                                        if (pList != null)
+                                        int planId = kv.Key;
+                                        string planTitle = kv.Value;
+                                        SPListItem rPlanListItem = rPlanListItems.GetItemById(planId);
+                                        ArrayList leftdays=SetLog(spWeb, LogList, days, currentUser, planId,planTitle);
+                                        if (cbWeekEnd.Checked)//跳过周末
                                         {
-                                            for (int i = k; i < days; i++)
-                                            {
-                                                SPListItem pitem = pList.AddItem();
-                                                pitem["对象"] = rPlanListItem["标题"];
-                                                DateTime dtStart = (DateTime)rPlanListItem["计划开始"];
-                                                pitem["计划开始"] = DateTime.Now.AddDays(i).Date + dtStart.TimeOfDay;
-                                                pitem["计划时长"] = rPlanListItem["计划时长"];
-
-                                                pitem["活动操作"] = rPlanListItem["操作"];
-                                                pitem["创建者"] = currentUser.ID;
-                                                pitem["修改者"] = currentUser.ID;
-                                                pitem.Update();
-                                            }
+                                            ArrayList workDays = QueryWeekDays(leftdays);
+                                            writeToPlan(spWeb, planList, workDays, currentUser, rPlanListItem);
+                                        }
+                                        else
+                                        {
+                                            writeToPlan(spWeb, planList, leftdays, currentUser, rPlanListItem);
                                         }
                                     }
+                                }
+                            }
+                            else
+                            {
+                                lbErr.Text = "“" + rPlanList + "”列表不存在！";
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    lbErr.Text = "行号 "+ex.StackTrace+":"+ex.ToString();
+                }
+            });
+        }
+
+        private void writeToPlan(SPWeb spWeb, string planList, ArrayList leftDays, SPUser currentUser, SPListItem rPlanListItem)
+        {
+            if (leftDays.Count > 0)
+            {
+                try
+                {
+                    SPList pList = spWeb.Lists.TryGetList(planList);
+                    if (pList != null)
+                    {
+                        for (int j = 0; j < leftDays.Count; j++)
+                        {
+                            SPListItem pitem = pList.AddItem();
+                            pitem["对象"] = rPlanListItem["标题"];
+                            DateTime dtStart = (DateTime)rPlanListItem["计划开始"];
+                            pitem["计划开始"] = ((DateTime)leftDays[j]).Date + dtStart.TimeOfDay;
+                            pitem["计划时长"] = rPlanListItem["计划时长"];
+
+                            pitem["活动操作"] = rPlanListItem["操作"];
+                            pitem["创建者"] = currentUser.ID;
+                            pitem["修改者"] = currentUser.ID;
+                            pitem.Update();
+                        }
+                    }
+                    else
+                    {
+                        lbErr.Text = "“" + planList + "”列表不存在！";
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    lbErr.Text = ex.ToString();
+                }
+            }
+            else
+            {
+                lbErr.Text = "你所设置的天数内，没有例行计划要生成！";
+            }
+        }
+
+        /// <summary>
+        /// 查询执行历史，判断是否需要生成新数据，若生成，则返回需要生成的天数，否则返回0
+        /// </summary>
+        /// <param name="spWeb">网站</param>
+        /// <param name="LogList">历史列表</param>
+        /// <param name="days">用户填写的天数</param>
+        /// <param name="currentUser">当前用户</param>
+        /// <param name="planId">要执行的例行计划ID</param>
+        /// <returns></returns>
+        private ArrayList SetLog(SPWeb spWeb, string LogList, int days, SPUser currentUser, int planId, string planTitle)
+        {
+            ArrayList alist = new ArrayList();
+            spWeb.AllowUnsafeUpdates = true;
+            try
+            {
+                SPList logList = spWeb.Lists.TryGetList(LogList);
+                if (logList != null)
+                {
+                    string isWeekEnd = "包含周末";
+                    if (cbWeekEnd.Checked)//跳过周末
+                    {
+                        isWeekEnd = "跳过周末";
+                    }
+                    SPQuery qry = new SPQuery();
+
+                    qry.Query = "<Where><And><Eq><FieldRef Name='PlanID'/><Value Type='Number'>" + planId + "</Value></Eq><Eq><FieldRef Name='Author' LookupId='True' /><Value Type='Integer'>" + currentUser.ID + "</Value></Eq></And></Where>";
+                    //查找当前用户执行planId所对应的例行计划的历史记录
+                    SPListItemCollection logListItems = logList.GetItems(qry);
+                    DateTime dtNow = DateTime.Now;
+                    if (logListItems.Count > 0)//记录已找到
+                    {
+                        SPListItem logItem = logListItems[0];
+                        DateTime dtEnd = (DateTime)logItem["截止日期"];
+                        int n = GetNumberInt(logItem["标题"].ToString());
+                        if (dtEnd.Date > dtNow.Date)
+                        {
+                            int leftdays = days - DateDiff(dtNow, dtEnd) - 1;
+                            if (leftdays > 0)
+                            {
+                                n = n + 1;
+                                logItem["标题"] = currentUser.Name + "第" + n + "次生成“"+planTitle+"”计划";
+                                logItem["开始日期"] = dtEnd.AddDays(1).Date;
+                                logItem["截止日期"] = dtEnd.AddDays(leftdays).Date;
+                                logItem["历史记录"] = logItem["历史记录"] + "第" + n + "次（" + dtNow + "）：" + dtEnd.AddDays(1).ToShortDateString() + "-" + dtEnd.AddDays(leftdays).ToShortDateString() + "（" + isWeekEnd + "）;";
+                                //logItem["例行计划ID"] = planId;
+                                logItem.Update();
+                                for (int i = 1; i <= leftdays; i++)
+                                {
+                                    alist.Add(dtEnd.AddDays(i).Date);
+                                }
+                                lbErr.Text = "本次执行共生成了从 " + dtEnd.AddDays(1).ToShortDateString() + "起， " + leftdays + " 天（"+isWeekEnd+"）的例行计划！";
+                            }
+                            else
+                            {
+                                lbErr.Text = "从今天起，" + days + "天内的例行计划已生成，无需重复执行！";
+                            }
+                        }
+                        else
+                        {
+                            n = n + 1;
+                            logItem["标题"] = currentUser.Name + "第" + n + "次生成“" + planTitle + "”计划";
+                            logItem["开始日期"] = dtNow;
+                            logItem["截止日期"] = dtNow.AddDays(days - 1);
+                            logItem["历史记录"] = logItem["历史记录"] + "第" + n + "次(" + dtNow + ")：" + dtNow.ToShortDateString() + "-" + dtNow.AddDays(days - 1).ToShortDateString() + "（" + isWeekEnd + "）;";
+                            //logItem["例行计划ID"] = planId;
+                            logItem.Update();
+                            for (int i = 0; i < days; i++)
+                            {
+                                alist.Add(dtNow.AddDays(i).Date);
+                            }
+                            lbErr.Text = "本次执行共生成了从今天起， " + days + " 天（" + isWeekEnd + "）的例行计划！";
+                        }
+                    }
+                    else//记录未找到
+                    {
+                        SPListItem logItem = logList.AddItem();
+                        logItem["标题"] = currentUser.Name + "第1次生成“" + planTitle + "”计划";
+                        logItem["开始日期"] = dtNow;
+                        logItem["截止日期"] = dtNow.AddDays(days - 1);
+                        logItem["历史记录"] = "第1次(" + dtNow + ")：" + dtNow.ToShortDateString() + "-" + dtNow.AddDays(days - 1).ToShortDateString() + "（" + isWeekEnd + "）;";
+                        logItem["例行计划ID"] = planId;
+                        logItem["创建者"] = currentUser.ID;
+                        logItem["修改者"] = currentUser.ID;
+                        logItem.Update();
+                        for (int i = 0; i < days; i++)
+                        {
+                            alist.Add(dtNow.AddDays(i).Date);
+                        }
+                        lbErr.Text = "本次执行共生成了从今天起， " + days + " 天（" + isWeekEnd + "）的例行计划！";
+                    }
+                }
+                else
+                {
+                    lbErr.Text = "“" + LogList + "”列表不存在！";
+                }
+            }
+            catch (Exception ex)
+            {
+                lbErr.Text = ex.ToString();
+            }
+            return alist;
+        }
+
+        private ArrayList QueryWeekDays(ArrayList sList)
+        {
+            ArrayList aList = new ArrayList();
+            foreach (var item in sList)
+            {
+                DateTime dt = (DateTime)item;
+                if (dt.DayOfWeek.ToString()!= "Saturday" && dt.DayOfWeek.ToString()!="Sunday")
+                {
+                    aList.Add(item);
+                }
+            }
+            return aList;
+        }
+
+        private void BindRoutinePlan(string rPlanList, string siteUrl,int colCount)
+        {
+            SPSecurity.RunWithElevatedPrivileges(delegate ()
+            {
+                try
+                {
+                    using (SPSite spSite = new SPSite(siteUrl)) //找到网站集
+                    {
+                        using (SPWeb spWeb = spSite.OpenWeb())
+                        {
+                            if (rPlanList != "")
+                            {
+
+                                SPList spList = spWeb.Lists.TryGetList(rPlanList);
+                                if (spList != null)
+                                {
+                                    SPListItemCollection items = spList.GetItems();
+                                    cblPlans.DataTextField = "Title";
+                                    cblPlans.DataValueField = "ID";
+                                    cblPlans.DataSource = items;
+                                    cblPlans.DataBind();
+                                    cblPlans.RepeatColumns = colCount;
                                 }
                             }
                         }
@@ -180,46 +329,117 @@ namespace RoutinePlan.VisualWebPart1
                 }
                 catch (Exception ex)
                 {
-                    refStr = ex.ToString();
+
+                    lbErr.Text = ex.ToString();
                 }
             });
-            return refStr;
         }
 
-        private static void WritePlan(string planList, string siteUrl, SPListItem rPlanListItem, int days)
+        #region 判断工作日
+        //获取当前周几
+
+        private string _strWorkingDayAM = "08:30";//工作时间上午08:00
+        private string _strWorkingDayPM = "17:30";
+        private string _strRestDay = "6,7";//周几休息日 周六周日为 6,7
+
+        private TimeSpan dspWorkingDayAM;//工作时间上午08:00
+        private TimeSpan dspWorkingDayPM;
+        /// <summary>
+        /// 判断一个时间是星期几
+        /// </summary>
+        /// <param name="dt">指定时间</param>
+        /// <returns></returns>
+        private string m_GetDateTimeWeek(DateTime dt)
         {
-            SPSecurity.RunWithElevatedPrivileges(delegate ()
+            string strWeek = dt.DayOfWeek.ToString();
+            switch (strWeek)
             {
-                using (SPSite spSite = new SPSite(siteUrl)) //找到网站集
-                {
-                    using (SPWeb spWeb = spSite.OpenWeb())
+                case "Monday":
                     {
-                        if (planList != "")
-                        {
-
-                            SPList spList = spWeb.Lists.TryGetList(planList);
-                            if (spList != null)
-                            {
-                                for (int i = 0; i < days; i++)
-                                {
-                                    SPListItem item = spList.AddItem();
-                                    item["标题"] = rPlanListItem["标题"];
-                                    DateTime dtStart = (DateTime)rPlanListItem["计划开始"];
-                                    item["计划开始"] = DateTime.Now.AddDays(i).Date + dtStart.TimeOfDay;
-                                    item["计划时长"] = rPlanListItem["计划时长"];
-
-                                    item["活动操作"] = rPlanListItem["操作"];
-                                    item["创建者"] = spWeb.EnsureUser(spWeb.CurrentUser.LoginName);
-                                    item["修改者"] = spWeb.CurrentUser;
-                                    item.Update();
-                                }
-                            }
-                        }
+                        return "1";
                     }
-                }
-            });
+                case "Tuesday":
+                    {
+                        return "2";
+                    }
+                case "Wednesday":
+                    {
+                        return "3";
+                    }
+                case "Thursday":
+                    {
+                        return "4";
+                    }
+                case "Friday":
+                    {
+                        return "5";
+                    }
+                case "Saturday":
+                    {
+                        return "6";
+                    }
+                case "Sunday":
+                    {
+                        return "7";
+                    }
+            }
+            return "0";
         }
 
+
+        /// <summary>
+        /// 判断是否在工作日内
+        /// </summary>
+        /// <param name="dt">指定时间</param>
+        /// <returns></returns>
+        private bool m_IsWorkingDay(DateTime dt)
+        {
+            string strWeekNow = this.m_GetDateTimeWeek(dt);//当前周几
+                                                    ////判断是否有休息日
+            string[] RestDay = _strRestDay.Split(',');
+            if (RestDay.Contains(strWeekNow))
+            {
+                return false;
+            }
+            //判断当前时间是否在工作时间段内
+
+            dspWorkingDayAM = DateTime.Parse(_strWorkingDayAM).TimeOfDay;
+            dspWorkingDayPM = DateTime.Parse(_strWorkingDayPM).TimeOfDay;
+
+            TimeSpan dspDT = dt.TimeOfDay;
+            if (dspDT > dspWorkingDayAM && dspDT < dspWorkingDayPM)
+            {
+                return true;
+            }
+            return false;
+        }
+        //初始化默认值
+        private void m_InitWorkingDay()
+        {
+            dspWorkingDayAM = DateTime.Parse(_strWorkingDayAM).TimeOfDay;
+            dspWorkingDayPM = DateTime.Parse(_strWorkingDayPM).TimeOfDay;
+
+        }
+        #endregion
+
+
+        /// <summary>
+        /// 遍历多选框将所有选中的项的ID和值存入键值对
+        /// </summary>
+        /// <param name="checkList">多选框控件ID</param>
+        /// <returns>Dictionary<int, string></returns>
+        public static Dictionary<int, string> GetChecked(CheckBoxList checkList)
+        {
+            Dictionary<int, string> dict = new Dictionary<int, string>();
+            for (int i = 0; i < checkList.Items.Count; i++)
+            {
+                if (checkList.Items[i].Selected)
+                {
+                    dict.Add(int.Parse(checkList.Items[i].Value), checkList.Items[i].Text);
+                }
+            }
+            return dict;
+        }
         protected void rblistCycle_SelectedIndexChanged(object sender, EventArgs e)
         {
             string rbValue = rblistCycle.SelectedValue;
@@ -356,7 +576,7 @@ namespace RoutinePlan.VisualWebPart1
         public static int GetNumberInt(string str)
         {
             int result = 0;
-            if (str != null && str != string.Empty)
+            if (!string.IsNullOrEmpty(str))
             {
                 // 正则表达式剔除非数字字符（不包含小数点.）
                 str = Regex.Replace(str, @"[^\d.\d]", "");
@@ -368,5 +588,7 @@ namespace RoutinePlan.VisualWebPart1
             }
             return result;
         }
+
+
     }
 }

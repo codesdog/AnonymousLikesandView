@@ -13,13 +13,31 @@ namespace RoutinePlan.VisualWebPart1 {
     public partial class VisualWebPart1UserControl {
         
         /// <summary>
-        /// Panel1 控件。
+        /// AppraiseDiv 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel1;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl AppraiseDiv;
+        
+        /// <summary>
+        /// cblPlans 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList cblPlans;
+        
+        /// <summary>
+        /// lbDaysSpan 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbDaysSpan;
         
         /// <summary>
         /// tbDays 控件。
@@ -29,6 +47,15 @@ namespace RoutinePlan.VisualWebPart1 {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tbDays;
+        
+        /// <summary>
+        /// cbWeekEnd 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbWeekEnd;
         
         /// <summary>
         /// btnMakePlans 控件。

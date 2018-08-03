@@ -6,13 +6,110 @@
 <%@ Import Namespace="Microsoft.SharePoint" %>
 <%@ Register Tagprefix="WebPartPages" Namespace="Microsoft.SharePoint.WebPartPages" Assembly="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="VisualWebPart1UserControl.ascx.cs" Inherits="RoutinePlan.VisualWebPart1.VisualWebPart1UserControl" %>
+<style type="text/css">
+    .Appraise {
+    box-shadow: 0 1px 3px #ccc;
+    background-color: white;
+    background-color: rgba(255, 255, 255, 0.6);
+    padding:10px 20px 10px 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    width:100%;
+    max-width:420px;
+    line-height:30px;
+    font-size:14px;
 
-<asp:Panel ID="Panel1" runat="server">
-    <div style="line-height:30px;font-size:14px;">输入生成计划天数(最多不超过7天，最少1天)：<br/><asp:TextBox ID="tbDays" runat="server" TextMode="Number" ToolTip="请输入1-7之间的正整数" Width="41px">3</asp:TextBox> 天
-    <asp:Button ID="btnMakePlans" runat="server" Text="点击生成" OnClick="btnMakePlans_Click" Font-Bold="True" Font-Size="10pt"/><br />
-    <asp:Label ID="lbErr" runat="server" Text="" ForeColor="red"></asp:Label>
+}
+    .Appraise .title {
+    height: 50px;
+    line-height: 50px;
+    font-family: "微软雅黑", "PingFang SC", sans;
+    font-weight: 600;
+    color: #000;
+    font-size: 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+        .formul{
+        list-style:none;
+        margin-left:auto;
+        }
+        .formul li{
+        line-height:25px;
+        padding-bottom:10px;
+        }
+        .formul li button{
+        font-size:14px;
+        }
+        .att{
+            background-color:#cfcfcf;
+            color:red;
+            font-size:14px;
+        }
+.button{
+        width: 50px;
+        text-align: center;
+        font-weight: bold;
+        color: #000;
+        border-radius: 5px;
+        margin:0 5px 5px 0;
+        overflow: hidden;
+        cursor:pointer;
+    }
+     </style>
+<script type="text/javascript">
+        function checkAll() {
+            for (var i = 0; i < document.getElementById("cblPlans").getElementsByTagName("input").length; i++) {
+                document.getElementById("cblPlans_" + i).checked = true;
+            }
+        }
+
+        function deleteAll() {
+            for (var i = 0; i < document.getElementById("cblPlans").getElementsByTagName("input").length; i++) {
+                document.getElementById("cblPlans_" + i).checked = false;
+            }
+        }
+
+        function ReverseAll() {
+
+            for (var i = 0; i < document.getElementById("cblPlans").getElementsByTagName("input").length; i++) {
+
+                var objCheck = document.getElementById("cblPlans_" + i);
+
+                if (objCheck.checked)
+
+                    objCheck.checked = false;
+                else
+                    objCheck.checked = true;
+            }
+        }
+    </script>
+<div id="AppraiseDiv" class="Appraise" runat="server">
+    <div class="title">生成例行计划</div>
+
+    第1步：选择例行计划项目：
+    <div id="rplansDiv" style="padding-left: 20px;">
+        <asp:CheckBoxList ID="cblPlans" runat="server" RepeatColumns="4" RepeatDirection="Horizontal" ClientIDMode="Static" CellPadding="1" CellSpacing="1"></asp:CheckBoxList>
+    </div>
+    <div style="text-align: center;">
+        <input type="button" onclick="checkAll()" value="全选" class="button" />&nbsp;
+        <input type="button" onclick="ReverseAll()" value="反选" class="button" />&nbsp;
+        <input type="button" onclick="deleteAll()" value="取消" class="button" />
+    </div>
+    <hr />
+    <div>
+        第2步：输入生成天数<asp:Label ID="lbDaysSpan" runat="server" Text="（最少1天，最多7天）"></asp:Label>：<br />
+        <div style="padding-left: 20px;">
+            从今天起，<asp:TextBox ID="tbDays" runat="server" TextMode="Number" ToolTip="请输入1-7之间的正整数" Width="41px" ClientIDMode="Static">3</asp:TextBox>
+            &nbsp;天，&nbsp;&nbsp;<asp:CheckBox ID="cbWeekEnd" runat="server" Text="跳过周末" AutoPostBack="True" />
         </div>
-</asp:Panel>
+    </div>
+    <hr />
+    <div style="text-align: center">
+        <asp:Button ID="btnMakePlans" runat="server" Text="点击生成" OnClick="btnMakePlans_Click" Font-Bold="True" Width="100px" Font-Size="15px" CssClass="button" Height="35px" /><br />
+    </div>
+    <asp:Label ID="lbErr" runat="server" Text="" ForeColor="red"></asp:Label>
+</div>
 
 
 <div runat="server" visible="false">
@@ -185,9 +282,9 @@
 <asp:RadioButtonList ID="rbTest" runat="server">
      <asp:ListItem Value="1">
          <select id="Select1" >
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <option value="1">1</option>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <option value="1">1</option>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; </select></asp:ListItem>
+             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <option value="1">1</option>
+             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <option value="1">1</option>
+             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; </select></asp:ListItem>
     <asp:ListItem Value="2">第二个</asp:ListItem>
 </asp:RadioButtonList>
 </div>

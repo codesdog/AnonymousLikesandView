@@ -83,19 +83,49 @@ namespace RoutinePlan.VisualWebPart1
             }
         }
 
-        private int _days =2;
-        [Personalizable, WebDisplayName("一次生成天数"), WebDescription("一次生成数据的天数，如：2"), WebBrowsable, Category("自定义设置")]
-        public int Days
+        private int _minValue =1;
+        [Personalizable, WebDisplayName("最小生成天数"), WebDescription("一次生成数据的最小天数，如：1"), WebBrowsable, Category("自定义设置")]
+        public int MinValue
         {
             get
             {
-                return this._days;
+                return this._minValue;
             }
             set
             {
-                this._days = value;
+                this._minValue = value;
             }
         }
+
+
+        private int _maxValue = 7;
+        [Personalizable, WebDisplayName("最大生成天数"), WebDescription("一次生成数据的最大天数，如：7"), WebBrowsable, Category("自定义设置")]
+        public int MaxValue
+        {
+            get
+            {
+                return this._maxValue;
+            }
+            set
+            {
+                this._maxValue = value;
+            }
+        }
+
+        private int _colCount = 4;
+        [Personalizable, WebDisplayName("列数"), WebDescription("多选框选项分布列数，如：4"), WebBrowsable, Category("自定义设置")]
+        public int ColCount
+        {
+            get
+            {
+                return this._colCount;
+            }
+            set
+            {
+                this._colCount = value;
+            }
+        }
+
         #endregion
     }
 }
