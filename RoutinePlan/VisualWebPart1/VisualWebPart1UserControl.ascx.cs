@@ -191,6 +191,7 @@ namespace RoutinePlan.VisualWebPart1
         /// <param name="days">用户填写的天数</param>
         /// <param name="currentUser">当前用户</param>
         /// <param name="planId">要执行的例行计划ID</param>
+        /// <param name="planTitle">要执行的例行计划标题</param>
         /// <returns></returns>
         private ArrayList SetLog(SPWeb spWeb, string LogList, int days, SPUser currentUser, int planId, string planTitle)
         {
