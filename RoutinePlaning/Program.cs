@@ -69,7 +69,7 @@ namespace RoutinePlaning
                                         DataTable dtBenchmark = GetBenchmarkByIndex(stateIndexs[i], siteUrl, benchmarkList);
                                         if (dtBenchmark.Rows.Count > 0)
                                         {
-                                            for(int j = 0; j <= dtBenchmark.Rows.Count; j++)
+                                            for (int j = 0; j <= dtBenchmark.Rows.Count; j++)
                                             {
                                                 string aType = dtBenchmark.Rows[j]["活动类别"].ToString();
                                                 string selectStr = "操作类别 ='" + aType + "'";
@@ -239,8 +239,8 @@ namespace RoutinePlaning
         /// </summary>
         /// <param name="dtFirst">第一个DataTable</param>
         /// <param name="dtSecond">第二个DataTable</param>
-        /// <param name="FJC"></param>
-        /// <param name="SJC"></param>
+        /// <param name="FJC">第一个DataTable列集合</param>
+        /// <param name="SJC">第二个DataTable列集合</param>
         /// <returns></returns>
         public static DataTable JoinDataTable(DataTable dtFirst, DataTable dtSecond, DataColumn[] FJC, DataColumn[] SJC)
         {
@@ -309,7 +309,7 @@ namespace RoutinePlaning
         /// <param name="dt2">第二个DataTable</param>
         /// <param name="KeyColName">关联的列名</param>
         /// <returns></returns>
-        public DataTable MergeDataTable(DataTable dt1, DataTable dt2, String KeyColName)
+        public static DataTable MergeDataTable(DataTable dt1, DataTable dt2, String KeyColName)
         {
             //定义临时变量
             DataTable dtReturn = new DataTable();
