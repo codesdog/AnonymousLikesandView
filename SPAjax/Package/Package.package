@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="e2deb492-9b4c-4461-bd03-0091a1674b01" solutionId="e2deb492-9b4c-4461-bd03-0091a1674b01" resetWebServer="false" sharePointProductVersion="15.0" name="SPAjax" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/PackageModel">
+  <projectItems>
+    <projectItemReference itemId="cdd26267-e734-45df-be00-51aa28c59c75" />
+  </projectItems>
+</package>

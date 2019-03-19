@@ -14,11 +14,11 @@ namespace RoutinePlaning
     {
         static void Main(string[] args)
         {
-            string rpList = ConfigurationSettings.AppSettings["RoutinePlanList"].ToString();
-            string siteUrl = ConfigurationSettings.AppSettings["siteUrl"].ToString();
-            string planList = ConfigurationSettings.AppSettings["PlanList"].ToString();
-            int duringDays=int.Parse(ConfigurationSettings.AppSettings["DuringDays"].ToString());
-            string[] stateIndexs = ConfigurationSettings.AppSettings["DuringDays"].ToString().Split(';');
+            string rpList = ConfigurationManager.AppSettings["RoutinePlanList"].ToString();
+            string siteUrl = ConfigurationManager.AppSettings["siteUrl"].ToString();
+            string planList = ConfigurationManager.AppSettings["PlanList"].ToString();
+            int duringDays=int.Parse(ConfigurationManager.AppSettings["DuringDays"].ToString());
+            string[] stateIndexs = ConfigurationManager.AppSettings["DuringDays"].ToString().Split(';');
             //GetRoutinePlan(rpList, siteUrl,planList,duringDays);
             DataView dv = DistinctProjectItem(siteUrl, planList, "Author");
             if (dv != null)
