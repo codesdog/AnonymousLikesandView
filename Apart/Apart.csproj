@@ -53,11 +53,10 @@
     <Reference Include="Microsoft.SharePoint.Client.ServerRuntime" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApartUC\ApartUC.cs" />
     <Compile Include="ApartUC\ApartUCUserControl.ascx.cs">
-      <DependentUpon>ApartUCUserControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="ApartUC\ApartUC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

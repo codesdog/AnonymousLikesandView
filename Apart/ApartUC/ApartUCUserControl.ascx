@@ -7,5 +7,8 @@
 <%@ Register Tagprefix="WebPartPages" Namespace="Microsoft.SharePoint.WebPartPages" Assembly="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ApartUCUserControl.ascx.cs" Inherits="Apart.ApartUC.ApartUCUserControl" %>
 <div>
-    <asp:Label ID="lbtxt" runat="server" Text="111"></asp:Label>
+
+    <asp:TextBox ID="tbtxt" runat="server"></asp:TextBox>
+    <asp:Button ID="btn1" runat="server" Text="提交" OnClick="btn1_Click" /><br />
+     <asp:Label ID="lbtxt" runat="server" Text="111"></asp:Label>
 </div>
